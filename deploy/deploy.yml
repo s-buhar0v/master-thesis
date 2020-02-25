@@ -1,0 +1,24 @@
+---
+- hosts: master-thesis
+  vars:
+    ansible_user: developer
+    deploy_key_path: /home/developer/.ssh/id_developer
+  tasks:
+    - name: Stop docker compose
+      script: ./stop_docker_compose.sh
+
+    - name: Remove all docker containers
+      shell: |
+        [ ! -z $(docker ps -aq) ] && docker rm -f $(docker ps -aq) || exit 0
+
+    - name: Remove repo folder
+      shell: rm -rf /app/master-thesis
+
+    - name: Clone repo
+      git:
+        repo: git@github.com:s-buhar0v/master-thesis.git
+        dest: /app/master-thesis
+        key_file: "{{ deploy_key_path }}"
+
+    - name: Start docker compose
+      script: ./start_docker_compose.sh

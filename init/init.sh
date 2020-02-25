@@ -28,3 +28,9 @@ curl -sS -w "\n" -X POST ${GRAFANA_BASE_URL}/datasources \
     -d @operational-datasource.json \
     -H 'Accept: application/json' \
     -H 'Content-Type: application/json' | jq -r '.message'
+
+curl -sS -w "\n" -X POST ${GRAFANA_BASE_URL}/dashboards/db \
+    -u admin:admin \
+    -d @operation-dashboard.json \
+    -H 'Accept: application/json' \
+    -H 'Content-Type: application/json' | jq -r '.message'

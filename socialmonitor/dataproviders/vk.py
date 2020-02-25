@@ -23,3 +23,14 @@ class VkDataExtractor(HttpClientMixin):
         params.update(self._default_params)
 
         return self.request(method='get', endpoint='/wall.get', params=params).json()['response']['count']
+
+    def get_group_members_count(self, group_name):
+        params = {
+            'group_id': group_name,
+            'count': 0
+        }
+
+        params.update(self._default_params)
+
+        return self.request(method='get', endpoint='/groups.getMembers', params=params).json()['response']['count']
+

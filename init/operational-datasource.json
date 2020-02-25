@@ -3,5 +3,8 @@
     "type": "prometheus",
     "url": "http://victoria-metrics:8428",
     "access": "proxy",
-    "basicAuth": false
+    "basicAuth": false,
+    "jsonData": {
+        "timeInterval": "60s"
+    }
 }

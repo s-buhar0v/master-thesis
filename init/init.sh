@@ -29,8 +29,25 @@ curl -sS -w "\n" -X POST ${GRAFANA_BASE_URL}/datasources \
     -H 'Accept: application/json' \
     -H 'Content-Type: application/json' | jq -r '.message'
 
-curl -sS -w "\n" -X POST ${GRAFANA_BASE_URL}/dashboards/db \
+
+printf "${RED}# Delete unknown dashboard ...\n${NC}"
+
+curl -sS -w "\n" -X DELETE ${GRAFANA_BASE_URL}/dashboards/uid/b5V2idQZk \
+    -u admin:admin \
+    -H 'Accept: application/json' \
+    -H 'Content-Type: application/json'
+
+printf "${GREEN}# Add dashboard ...\n${NC}"
+
+dashboard_id=$(curl -sS -w "\n" -X POST ${GRAFANA_BASE_URL}/dashboards/db \
     -u admin:admin \
     -d @operation-dashboard.json \
     -H 'Accept: application/json' \
-    -H 'Content-Type: application/json' | jq -r '.message'
+    -H 'Content-Type: application/json' | jq -r '.id')
+
+
+curl -sS -w "\n" -X PUT ${GRAFANA_BASE_URL}/org/preferences \
+    -u admin:admin \
+    -d $(cat ./org-preferences.json | jq -c ".homeDashboardId = ${dashboard_id}") \
+    -H 'Accept: application/json' \
+    -H 'Content-Type: application/json'

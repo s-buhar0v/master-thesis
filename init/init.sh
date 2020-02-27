@@ -5,6 +5,7 @@ RED='\033[0;31m'
 GREEN='\033[0;32m'
 
 DATASOURCE_NAME="Operational"
+DASHBOARD_UID="b5V2idQZk"
 GRAFANA_BASE_URL="grafana:3000/api"
 
 datasources=$(curl -sS -w "\n" -X GET ${GRAFANA_BASE_URL}/datasources \
@@ -32,7 +33,7 @@ curl -sS -w "\n" -X POST ${GRAFANA_BASE_URL}/datasources \
 
 printf "${RED}# Delete unknown dashboard ...\n${NC}"
 
-curl -sS -w "\n" -X DELETE ${GRAFANA_BASE_URL}/dashboards/uid/b5V2idQZk \
+curl -sS -w "\n" -X DELETE ${GRAFANA_BASE_URL}/dashboards/uid/${DASHBOARD_UID} \
     -u admin:admin \
     -H 'Accept: application/json' \
     -H 'Content-Type: application/json'

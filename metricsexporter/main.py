@@ -1,5 +1,5 @@
 from flask import Flask
-from socialmonitor.dataextractors.vk import VkDataExtractor
+from socialmonitor.dataproviders.vk import VkDataExtractor
 from prometheus_client import generate_latest, CollectorRegistry, Gauge
 
 REGISTRY = CollectorRegistry()

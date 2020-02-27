@@ -1,10 +1,8 @@
 set -eu
 
-DOCKER_COMPOSE_PATH="/app/master-thesis/docker-compose.yml"
 PROJECT_NAME="master-thesis"
-
 PROJECT_PATH="/app/master-thesis/"
-DOCKER_COMPOSE_PATH="/app/master-thesis/docker-compose.yml"
+DOCKER_COMPOSE_PATH="${PROJECT_PATH}/docker-compose.prod.yml"
 
 docker rmi -f sbukhar0v/master-thesis-init:latest
 docker rmi -f sbukhar0v/master-thesis-metricsexporter:latest

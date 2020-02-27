@@ -1,0 +1,36 @@
+version: "3.7"
+services:
+  prometheus:
+    image: prom/prometheus:v2.16.0
+    volumes:
+      - "./configuration/prometheus.yml:/etc/prometheus/prometheus.yml"
+    ports:
+      - "9090:9090"
+  victoria-metrics:
+    image: victoriametrics/victoria-metrics:v1.33.1
+    ports:
+      - "8428:8428"
+    volumes:
+      - "victoria-metrics-data:/victoria-metrics-data"
+  grafana:
+    image: grafana/grafana:master
+    ports:
+      - "3001:3000"
+    volumes:
+      - "grafana-data:/var/lib/grafana"
+  metrics-exporter:
+    image: sbukhar0v/master-thesis-metricsexporter:latest
+    ports:
+      - "5000:5000"
+    environment:
+      VK_API_ACCESS_TOKEN: "b9cd2c82b9cd2c82b9cd2c824bb9a7e458bb9cdb9cd2c82e5278cc0f74ee04dd7e93222"
+  init:
+    image: sbukhar0v/master-thesis-init:latest
+    depends_on:
+      - grafana
+
+volumes:
+  victoria-metrics-data:
+    name: victoria-metrics-data
+  grafana-data:
+    name: grafana-data

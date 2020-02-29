@@ -1,6 +1,6 @@
 FROM centos:centos8.1.1911
 
-COPY ./init /app
+COPY ./initscripts /app
 
 WORKDIR /app
 

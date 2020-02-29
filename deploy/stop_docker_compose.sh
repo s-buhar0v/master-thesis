@@ -1,6 +1,6 @@
 set -eu
 
-DOCKER_COMPOSE_PATH="/app/master-thesis/docker-compose.yml"
+DOCKER_COMPOSE_PATH="${PROJECT_PATH}/docker-compose.prod.yml"
 
 if [ -f ${DOCKER_COMPOSE_PATH} ]; then
     docker-compose -f ${DOCKER_COMPOSE_PATH} down

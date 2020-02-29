@@ -46,7 +46,6 @@ dashboard_id=$(curl -sS -w "\n" -X POST ${GRAFANA_BASE_URL}/dashboards/db \
     -H 'Accept: application/json' \
     -H 'Content-Type: application/json' | jq -r '.id')
 
-
 curl -sS -w "\n" -X PUT ${GRAFANA_BASE_URL}/org/preferences \
     -u admin:admin \
     -d $(cat ./org-preferences.json | jq -c ".homeDashboardId = ${dashboard_id}") \

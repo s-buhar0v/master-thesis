@@ -4,15 +4,21 @@ services:
     image: prom/prometheus:v2.16.0
     volumes:
       - "./configuration/prometheus.yml:/etc/prometheus/prometheus.yml"
+    ports:
+      - "9090:9090"
   victoria-metrics:
     image: victoriametrics/victoria-metrics:v1.33.1
     volumes:
       - "victoria-metrics-data:/victoria-metrics-data"
+    ports:
+      - "8428:8428"
   grafana:
     image: grafana/grafana:master
     volumes:
       - "grafana-data:/var/lib/grafana"
       - "./configuration/grafana.ini:/etc/grafana/grafana.ini"
+    ports:
+      - "3000:3000"
   metrics-exporter:
     image: sbukhar0v/master-thesis-metricsexporter:latest
     ports:

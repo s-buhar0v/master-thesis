@@ -7,7 +7,7 @@
     environment: prod
   tasks:
     - name: Stop docker compose
-      script: ./0_stop.sh -e "{{ environment }}" -p "{{ project_path }}"
+      script: ./0_stop.sh -e prod -p "{{ project_path }}"
 
     - name: Remove repo folder
       shell: rm -rf "{{ project_path }}"
@@ -27,4 +27,4 @@
         crontab "{{ project_path }}/jobs/crontab"
 
     - name: Start docker compose
-      script: ./2_run.sh -e "{{ environment }}" -p "{{ project_path }}"
+      script: ./2_run.sh -e prod -p "{{ project_path }}"

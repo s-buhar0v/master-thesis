@@ -1,7 +1,5 @@
 set -eu
 
-set -eu
-
 while getopts ":e:p:" option; do
     case "${option}" in
     e) ENVIRONMET=${OPTARG} ;;

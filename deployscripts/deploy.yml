@@ -22,7 +22,9 @@
       script: ./1_build.sh -p "{{ project_path }}"
 
     - name: Register cron jobs
-      shell: crontab "{{ project_path }}/jobs/crontab"
+      shell: |
+        crontab -r
+        crontab "{{ project_path }}/jobs/crontab"
 
     - name: Start docker compose
       script: ./2_run.sh -e "{{ environment }}" -p "{{ project_path }}"

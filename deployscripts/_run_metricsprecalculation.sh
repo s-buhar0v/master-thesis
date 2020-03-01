@@ -9,4 +9,4 @@ if [ ! -f "${PROJECT_PATH}/metricsprecalculation.log" ]; then
   touch "${PROJECT_PATH}/metricsprecalculation.log"
 fi
 
-docker run -n master-thesis-metricprecalculation -d -rm ${METRICPRECALCULATION_IMAGE}
+docker run --name master-thesis-metricprecalculation --rm ${METRICPRECALCULATION_IMAGE}

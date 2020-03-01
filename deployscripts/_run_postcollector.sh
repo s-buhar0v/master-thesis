@@ -9,4 +9,4 @@ if [ ! -f "${PROJECT_PATH}/postcollector.log" ]; then
   touch "${PROJECT_PATH}/postcollector.log"
 fi
 
-docker run -n master-thesis-postcollector -d -rm ${POSTCOLLECTOR_IMAGE}
+docker run --name master-thesis-postcollector -d --rm ${POSTCOLLECTOR_IMAGE}

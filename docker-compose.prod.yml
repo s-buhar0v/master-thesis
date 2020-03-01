@@ -2,31 +2,36 @@ version: "3.7"
 services:
   prometheus:
     image: prom/prometheus:v2.16.0
+    container_name: master-thesis-prom
     volumes:
       - "./configuration/prometheus.yml:/etc/prometheus/prometheus.yml"
     ports:
       - "9090:9090"
   victoria-metrics:
     image: victoriametrics/victoria-metrics:v1.33.1
+    container_name: master-thesis-prom-storage
     volumes:
       - "victoria-metrics-data:/victoria-metrics-data"
     ports:
       - "8428:8428"
   grafana:
     image: grafana/grafana:master
+    container_name: master-thesis-grafana
     volumes:
       - "grafana-data:/var/lib/grafana"
       - "./configuration/grafana.ini:/etc/grafana/grafana.ini"
     ports:
       - "3000:3000"
   metrics-exporter:
-    image: sbukhar0v/master-thesis-metricsexporter:latest
+    image: master-thesis/metricsexporter:latest
+    container_name: master-thesis-metrics-exporter
     ports:
       - "5000:5000"
     environment:
       VK_API_ACCESS_TOKEN: "b9cd2c82b9cd2c82b9cd2c824bb9a7e458bb9cdb9cd2c82e5278cc0f74ee04dd7e93222"
   nginx:
     image: nginx:1.17
+    container_name: master-thesis-nginx
     ports:
       - "80:80"
       - "443:443"
@@ -35,7 +40,8 @@ services:
     depends_on:
       - grafana
   init:
-    image: sbukhar0v/master-thesis-init:latest
+    image: master-thesis/init:latest
+    container_name: master-thesis-init
     depends_on:
       - grafana
 

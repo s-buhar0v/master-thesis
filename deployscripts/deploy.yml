@@ -1,0 +1,28 @@
+---
+- hosts: master-thesis
+  vars:
+    ansible_user: developer
+    deploy_key_path: /home/developer/.ssh/id_developer
+    project_path: /app/master-thesis
+    environment: prod
+  tasks:
+    - name: Stop docker compose
+      script: ./0_stop.sh -e "{{ environment }}" -p "{{ project_path }}"
+
+    - name: Remove repo folder
+      shell: rm -rf "{{ project_path }}"
+
+    - name: Clone repo
+      git:
+        repo: git@github.com:s-buhar0v/master-thesis.git
+        dest: "{{ project_path }}"
+        key_file: "{{ deploy_key_path }}"
+
+    - name: Build docker images
+      script: ./1_build.sh -p "{{ project_path }}"
+
+    - name: Register cron jobs
+      shell: crontab "{{ project_path }}/jobs/crontab"
+
+    - name: Start docker compose
+      script: ./2_run.sh -e "{{ environment }}" -p "{{ project_path }}"

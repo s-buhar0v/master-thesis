@@ -28,6 +28,7 @@ services:
     ports:
       - "5000:5000"
     environment:
+      ENV MONGO_DB_CONNECTION_STRING: "mongodb+srv://master-thesis:38ea0b9d@masterthesis-8vbh1.azure.mongodb.net/masterthesis?retryWrites=true&w=majority"
       VK_API_ACCESS_TOKEN: "b9cd2c82b9cd2c82b9cd2c824bb9a7e458bb9cdb9cd2c82e5278cc0f74ee04dd7e93222"
   nginx:
     image: nginx:1.17

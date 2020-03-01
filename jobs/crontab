@@ -1,2 +1,3 @@
 * * * * * /app/master-thesis/deployscripts/_run_metricsprecalculation.sh /app/master-thesis
 * * * * * /app/master-thesis/deployscripts/_run_postcollector.sh /app/master-thesis
+* * * * * /app/master-thesis/deployscripts/_run_postcollector.sh /app/master-thesis

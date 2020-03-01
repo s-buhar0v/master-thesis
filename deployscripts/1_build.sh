@@ -10,7 +10,7 @@ function rebuild_image() {
     fi
 
     docker rmi -f ${image_name} || echo "No image ${image_name}"
-    docker build -t ${image_name} -f ${dockerfile_path} .
+    docker build -t ${image_name} -f ${dockerfile_path} ${PROJECT_PATH}
 }
 
 while getopts ":e:p:" option; do

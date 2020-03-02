@@ -53,3 +53,14 @@ class VkDataExtractor(HttpClientMixin):
 
         return self.request(method='get', endpoint='/groups.getMembers', params=params).json()['response']['count']
 
+    def get_group_members(self, group_name, count=1000, offset=0):
+        params = {
+            'fields': 'sex bdate,city,country,photo_max_orig,domain,connections,universities,last_seen,relation,music,personal,movies',
+            'group_id': group_name,
+            'count': count,
+            'offset': offset
+        }
+
+        params.update(self._default_params)
+
+        return self.request(method='get', endpoint='/groups.getMembers', params=params).json()['response']['items']

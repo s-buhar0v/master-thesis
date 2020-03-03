@@ -9,4 +9,4 @@ if [ ! -f "${PROJECT_PATH}/userdatacollector.log" ]; then
   touch "${PROJECT_PATH}/userdatacollector.log"
 fi
 
-docker run --name master-thesis-metricprecalculation --rm ${USEDATACOLLECTOR_IMAGE} >> "${PROJECT_PATH}/userdatacollector.log"
+docker run --name master-thesis-userdatacollector --rm ${USEDATACOLLECTOR_IMAGE} >> "${PROJECT_PATH}/userdatacollector.log"

@@ -13,4 +13,4 @@ if [ ! -f "${PROJECT_PATH}/${IMAGE_NAME}.log" ]; then
   touch "${PROJECT_PATH}/${IMAGE_NAME}.log"
 fi
 
-docker run --name master-thesis-metricsprecalculation --rm ${IMAGE_FULL_NAME} >> "${PROJECT_PATH}/${IMAGE_NAME}.log"
+docker run --name "${PROJECT_NAME}-${IMAGE_NAME}" --rm ${IMAGE_FULL_NAME} >> "${PROJECT_PATH}/${IMAGE_NAME}.log"

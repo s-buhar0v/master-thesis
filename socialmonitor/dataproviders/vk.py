@@ -11,7 +11,7 @@ class VkDataExtractor(HttpClientMixin):
         )
         self._default_params = {
             'access_token': os.environ['VK_API_ACCESS_TOKEN'],
-            'v': '5.92'
+            'v': '5.103'
         }
 
     def get_group_posts_count(self, group_name):
@@ -53,9 +53,9 @@ class VkDataExtractor(HttpClientMixin):
 
         return self.request(method='get', endpoint='/groups.getMembers', params=params).json()['response']['count']
 
-    def get_group_members(self, group_name, count=1000, offset=0):
+    def get_group_members_ids(self, group_name, count=1000, offset=0):
         params = {
-            'fields': 'sex bdate,city,country,photo_max_orig,domain,connections,universities,last_seen,relation,music,personal,movies',
+            'fields': 'deactivated,is_closed',
             'group_id': group_name,
             'count': count,
             'offset': offset
@@ -64,3 +64,13 @@ class VkDataExtractor(HttpClientMixin):
         params.update(self._default_params)
 
         return self.request(method='get', endpoint='/groups.getMembers', params=params).json()['response']['items']
+
+    def get_users(self, user_ids):
+        params = {
+            'user_ids': user_ids,
+            'fields': 'sex,bdate,city,country,photo_max_orig,domain,connections,universities,last_seen,relation,music,personal,movies',
+        }
+
+        params.update(self._default_params)
+
+        return self.request(method='get', endpoint='/users.get', params=params).json()['response']

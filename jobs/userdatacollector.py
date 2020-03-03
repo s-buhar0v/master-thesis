@@ -2,7 +2,7 @@ import os
 import pymongo
 from socialmonitor.dataproviders.vk import VkDataExtractor
 
-group_name = 'w220.club'
+vk_data_extractor = VkDataExtractor()
 
 
 def _is_user_accessible(user):
@@ -12,23 +12,46 @@ def _is_user_accessible(user):
         return not user['is_closed']
 
 
-def main():
-    client = pymongo.MongoClient(os.environ['MONGO_DB_CONNECTION_STRING'])
-    db = client.masterthesis
-    vk_data_extractor = VkDataExtractor()
+def _get_group_members_ids(group_name):
     chunk_size = 1000
-    mongo_chunk_size = 10000
 
-    members = []
-
+    all_members = []
     members_count = vk_data_extractor.get_group_members_count(group_name=group_name)
 
     for i in range(0, members_count, chunk_size):
-        members.extend(vk_data_extractor.get_group_members(group_name=group_name, offset=i))
+        all_members.extend(vk_data_extractor.get_group_members_ids(group_name=group_name, offset=i))
 
-    filtered_members = list(filter(_is_user_accessible, members))
+    active_members = list(filter(_is_user_accessible, all_members))
+    active_members_ids = list(map(lambda _member: _member['id'], active_members))
 
-    db.users.insert_many(filtered_members)
+    return {
+        'members': active_members_ids,
+        'count': len(active_members)
+    }
+
+
+def main():
+    group_name = 'w220.club'
+    client = pymongo.MongoClient(os.environ['MONGO_DB_CONNECTION_STRING'])
+    db = client.masterthesis
+
+    active_group_members_ids = _get_group_members_ids(group_name=group_name)
+    existing_group_members_ids = set(db.users.distinct('id'))
+
+    new_members_ids = list(set(active_group_members_ids['members']) - existing_group_members_ids)
+    new_members = []
+
+    if new_members_ids:
+        for i in range(0, len(new_members_ids), 300):
+            user_ids = ','.join(map(str, new_members_ids[i:i + 300]))
+            new_members.extend(
+                vk_data_extractor.get_users(
+                    user_ids=user_ids
+                )
+            )
+
+    if new_members:
+        db.users.insert_many(new_members)
 
 
 if __name__ == '__main__':

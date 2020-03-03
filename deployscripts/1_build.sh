@@ -30,9 +30,11 @@ EXPORTER_IMAGE="master-thesis/metricsexporter:latest"
 METRICPRECALCULATION_IMAGE="master-thesis/metricprecalculation:latest"
 POSTCOLLECTOR_IMAGE="master-thesis/postcollector:latest"
 POSTACTUALIZER_IMAGE="master-thesis/postactualizer:latest"
+USEDATACOLLECTOR_IMAGE="master-thesis/userdatacollector:latest"
 
 rebuild_image ${INIT_IMAGE} ${PROJECT_PATH}/init.Dockerfile
 rebuild_image ${EXPORTER_IMAGE} ${PROJECT_PATH}/metricsexporter.Dockerfile
 rebuild_image ${METRICPRECALCULATION_IMAGE} ${PROJECT_PATH}/metricsprecalculation.Dockerfile
 rebuild_image ${POSTCOLLECTOR_IMAGE} ${PROJECT_PATH}/postcollector.Dockerfile
 rebuild_image ${POSTACTUALIZER_IMAGE} ${PROJECT_PATH}/postactualizer.Dockerfile
+rebuild_image ${USEDATACOLLECTOR_IMAGE} ${PROJECT_PATH}/userdatacollector.Dockerfile

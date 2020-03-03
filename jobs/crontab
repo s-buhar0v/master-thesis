@@ -1,3 +1,4 @@
 * * * * * /app/master-thesis/deployscripts/_run_metricsprecalculation.sh /app/master-thesis
 * * * * * /app/master-thesis/deployscripts/_run_postcollector.sh /app/master-thesis
 * * * * * /app/master-thesis/deployscripts/_run_postactualizer.sh /app/master-thesis
+*/15 * * * * /app/master-thesis/deployscripts/_run_userdatacollector.sh /app/master-thesis

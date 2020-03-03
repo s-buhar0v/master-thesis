@@ -1,4 +1,6 @@
-* * * * * /app/master-thesis/deployscripts/_run_metricsprecalculation.sh /app/master-thesis
-* * * * * /app/master-thesis/deployscripts/_run_postcollector.sh /app/master-thesis
-* * * * * /app/master-thesis/deployscripts/_run_postactualizer.sh /app/master-thesis
-*/5 * * * * /app/master-thesis/deployscripts/_run_userdatacollector.sh /app/master-thesis
+JOBS_PATH=/app/master-thesis/deployscripts/
+
+* * * * * ${JOBS_PATH}/_run_job.sh /app/master-thesis metricsprecalculation
+* * * * * ${JOBS_PATH}/_run_job.sh /app/master-thesis postcollector
+* * * * * ${JOBS_PATH}/_run_job.sh /app/master-thesis postactualizer
+*/5 * * * * ${JOBS_PATH}/_run_job.sh /app/master-thesis userdatacollector

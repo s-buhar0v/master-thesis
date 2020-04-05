@@ -1,7 +1,8 @@
-PROJECT_NAME="master-thesis"
-INIT_APP_NAME="init"
-EXPORTER_APP_NAME="metricsexporter"
-METRICSPRECALCULATION_APP_NAME="metricsprecalculation"
-POSTCOLLECTOR_APP_NAME="postcollector"
-POSTACTUALIZER_APP_NAME="postactualizer"
-USEDATACOLLECTOR_APP_NAME="userdatacollector"
+PROJECT_NAME='master-thesis'
+INIT_APP_NAME='init'
+EXPORTER_APP_NAME='metricsexporter'
+ANALYTICSAPI_APP_NAME='analyticsapi'
+METRICSPRECALCULATION_APP_NAME='metricsprecalculation'
+POSTCOLLECTOR_APP_NAME='postcollector'
+POSTACTUALIZER_APP_NAME='postactualizer'
+USEDATACOLLECTOR_APP_NAME='userdatacollector'

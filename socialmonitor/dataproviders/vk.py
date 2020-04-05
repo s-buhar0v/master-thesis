@@ -13,6 +13,25 @@ class VkDataExtractor(HttpClientMixin):
             'access_token': os.environ['VK_API_ACCESS_TOKEN'],
             'v': '5.103'
         }
+        self._fields = 'sex,bdate,city,country,photo_max_orig,domain,connections,universities,last_seen,relation,music,personal,movies'
+
+    def search_groups(self, keywords, count=3):
+        params = {
+            'type': 'group',
+            'q': ','.join(keywords),
+            'count': count
+        }
+
+        params.update(self._default_params)
+
+        groups = self.request(method='get', endpoint='/groups.search', params=params).json()['response']['items']
+
+        return list(map(lambda g: {
+            'id': g['id'],
+            'name': g['name'],
+            'screen_name': g['screen_name'],
+            'photo': g['photo_50']
+        }, groups))
 
     def get_group_posts_count(self, group_name):
         params = {
@@ -68,7 +87,7 @@ class VkDataExtractor(HttpClientMixin):
     def get_users(self, user_ids):
         params = {
             'user_ids': user_ids,
-            'fields': 'sex,bdate,city,country,photo_max_orig,domain,connections,universities,last_seen,relation,music,personal,movies',
+            'fields': self._fields
         }
 
         params.update(self._default_params)

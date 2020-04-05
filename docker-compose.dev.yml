@@ -31,6 +31,16 @@ services:
       MONGO_DB_CONNECTION_STRING: "mongodb://developer:developer@mongo/masterthesis?retryWrites=true&w=majority"
     depends_on:
       - mongo
+  analyticsapi:
+    image: master-thesis/analyticsapi:latest
+    container_name: master-thesis-local-analyticsapi
+    ports:
+      - "5001:5000"
+    environment:
+      VK_API_ACCESS_TOKEN: "b9cd2c82b9cd2c82b9cd2c824bb9a7e458bb9cdb9cd2c82e5278cc0f74ee04dd7e93222"
+      MONGO_DB_CONNECTION_STRING: "mongodb://developer:developer@mongo/masterthesis?retryWrites=true&w=majority"
+    depends_on:
+      - mongo
   mongo:
     image: mongo:4.2.3
     container_name: master-thesis-local-mongo

@@ -4,7 +4,7 @@ from socialmonitor.corelib.httpclient import HttpClientMixin
 
 
 class VkDataExtractor(HttpClientMixin):
-    def __init__(self, access_token):
+    def __init__(self, access_token=None):
         HttpClientMixin.__init__(
             self,
             api_base_url='https://api.vk.com/method'

@@ -4,13 +4,13 @@ from socialmonitor.corelib.httpclient import HttpClientMixin
 
 
 class VkDataExtractor(HttpClientMixin):
-    def __init__(self):
+    def __init__(self, access_token):
         HttpClientMixin.__init__(
             self,
             api_base_url='https://api.vk.com/method'
         )
         self._default_params = {
-            'access_token': os.environ['VK_API_ACCESS_TOKEN'],
+            'access_token': access_token if access_token else  os.environ['VK_API_ACCESS_TOKEN'],
             'v': '5.103'
         }
         self._fields = 'sex,bdate,city,country,photo_max_orig,domain,connections,universities,last_seen,relation,music,personal,movies'

@@ -15,7 +15,7 @@ services:
     ports:
       - "8428:8428"
   grafana:
-    image: grafana/grafana:master
+    image: grafana/grafana:6.7.2
     container_name: master-thesis-grafana
     volumes:
       - "grafana-data:/var/lib/grafana"

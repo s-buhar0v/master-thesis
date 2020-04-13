@@ -8,6 +8,7 @@ client = pymongo.MongoClient(os.environ['MONGO_DB_CONNECTION_STRING'])
 db = client.masterthesis
 
 CITIES_TOP_COUNT = 5
+COUNTRIES_TOP_COUNT = 3
 LANGUAGES_TOP_COUNT = 3
 
 CURRENT_YEAR = datetime.utcnow().year
@@ -55,7 +56,6 @@ def _calculate_language_distribution():
         db.users.find({'personal': {'$ne': None}}, {'personal': 1})
     )
 
-    print(users_with_filled_personal_data[0])
     users_with_filled_languages = list(
         filter(lambda u: 'langs' in u['personal'], users_with_filled_personal_data)
     )
@@ -102,6 +102,29 @@ def _calculate_cities_distribution():
         'top': cities_distribution[
                cities_distribution_items_count - CITIES_TOP_COUNT: cities_distribution_items_count],
         'others': cities_distribution[0: cities_distribution_items_count - CITIES_TOP_COUNT],
+    }
+
+
+def _calculate_countries_distribution():
+    countries_distribution = []
+
+    users_with_filled_country = list(db.users.find({'country': {'$ne': None}}, {'country': 1}))
+    countries = set(map(lambda c: c['country']['title'], users_with_filled_country))
+
+    for country in countries:
+        count = len(list(filter(lambda u: u['country']['title'] == country, users_with_filled_country)))
+        countries_distribution.append({
+            'country': country,
+            'count': count,
+        })
+
+    countries_distribution.sort(key=lambda c: c['count'])
+    countries_distribution_items_count = len(countries_distribution)
+
+    return {
+        'top': countries_distribution[
+               countries_distribution_items_count - COUNTRIES_TOP_COUNT: countries_distribution_items_count],
+        'others': countries_distribution[0: countries_distribution_items_count - CITIES_TOP_COUNT],
     }
 
 
@@ -168,6 +191,7 @@ def main():
         },
         {
             '$set': {
+                'total_user_count': total_users_count,
                 'gender_distribution': _calculate_gender_distribution(),
                 'higher_education_percentage': _calculate_higher_education_percentage(
                     total_users_count=total_users_count
@@ -176,6 +200,7 @@ def main():
                     total_users_count=total_users_count
                 ),
                 'cities_distribution': _calculate_cities_distribution(),
+                'countries_distribution': _calculate_countries_distribution(),
                 'age_distribution': _calculate_age_distribution(),
                 'lang_distribution': _calculate_language_distribution(),
                 'last_update': datetime.utcnow().isoformat(),

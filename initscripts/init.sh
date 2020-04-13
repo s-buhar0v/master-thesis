@@ -8,6 +8,11 @@ DATASOURCE_NAME="Operational"
 DASHBOARD_UID="b5V2idQZk"
 GRAFANA_BASE_URL="grafana:3000/api"
 
+
+printf "Inital wait ...\n${NC}"
+
+sleep 30
+
 datasources=$(curl -sS -w "\n" -X GET ${GRAFANA_BASE_URL}/datasources \
     -u admin:admin \
     -H 'Accept: application/json' \

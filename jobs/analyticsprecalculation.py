@@ -182,6 +182,13 @@ def _calculate_relation_percentage(total_users_count):
     return _calculate_percentage(total=total_users_count, part=users_in_relation)
 
 
+def _calculate_instagram_percentage(total_users_count):
+    # see https://vk.com/dev/objects/user_2
+    users_with_instagram = db.users.count_documents({'instagram': {'$ne': None}})
+
+    return _calculate_percentage(total=total_users_count, part=users_with_instagram)
+
+
 def main():
     total_users_count = db.users.count_documents({})
 
@@ -199,6 +206,7 @@ def main():
                 'in_relation': _calculate_relation_percentage(
                     total_users_count=total_users_count
                 ),
+                'has_instagram': _calculate_instagram_percentage(total_users_count=total_users_count),
                 'cities_distribution': _calculate_cities_distribution(),
                 'countries_distribution': _calculate_countries_distribution(),
                 'age_distribution': _calculate_age_distribution(),

@@ -8,7 +8,7 @@ client = pymongo.MongoClient(os.environ['MONGO_DB_CONNECTION_STRING'])
 db = client.masterthesis
 
 CITIES_TOP_COUNT = 5
-COUNTRIES_TOP_COUNT = 3
+COUNTRIES_TOP_COUNT = 5
 LANGUAGES_TOP_COUNT = 3
 
 CURRENT_YEAR = datetime.utcnow().year
@@ -182,11 +182,20 @@ def _calculate_relation_percentage(total_users_count):
     return _calculate_percentage(total=total_users_count, part=users_in_relation)
 
 
-def _calculate_instagram_percentage(total_users_count):
+def _calculate_social_networks_connections_percentage(total_users_count):
     # see https://vk.com/dev/objects/user_2
-    users_with_instagram = db.users.count_documents({'instagram': {'$ne': None}})
-
-    return _calculate_percentage(total=total_users_count, part=users_with_instagram)
+    return {
+        'skype': _calculate_percentage(total=total_users_count, part=(
+            db.users.count_documents({'skype': {'$ne': None}}))),
+        'facebook': _calculate_percentage(total=total_users_count, part=(
+            db.users.count_documents({'facebook': {'$ne': None}}))),
+        'twitter': _calculate_percentage(total=total_users_count, part=(
+            db.users.count_documents({'twitter': {'$ne': None}}))),
+        'livejournal': _calculate_percentage(total=total_users_count, part=(
+            db.users.count_documents({'livejournal': {'$ne': None}}))),
+        'instagram': _calculate_percentage(total=total_users_count, part=(
+            db.users.count_documents({'instagram': {'$ne': None}}))),
+    }
 
 
 def main():
@@ -203,10 +212,11 @@ def main():
                 'higher_education_percentage': _calculate_higher_education_percentage(
                     total_users_count=total_users_count
                 ),
-                'in_relation': _calculate_relation_percentage(
+                'in_relation_percentage': _calculate_relation_percentage(
                     total_users_count=total_users_count
                 ),
-                'has_instagram': _calculate_instagram_percentage(total_users_count=total_users_count),
+                'social_networks_connection_percentage':
+                    _calculate_social_networks_connections_percentage(total_users_count=total_users_count),
                 'cities_distribution': _calculate_cities_distribution(),
                 'countries_distribution': _calculate_countries_distribution(),
                 'age_distribution': _calculate_age_distribution(),

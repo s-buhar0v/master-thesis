@@ -48,6 +48,7 @@ services:
       - "443:443"
     volumes:
       - "./configuration/nginx.conf:/etc/nginx/conf.d/default.conf"
+      - "./etc/ssl:/etc/ssl"
     depends_on:
       - grafana
   init:

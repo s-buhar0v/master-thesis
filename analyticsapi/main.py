@@ -63,3 +63,6 @@ def analytics():
         template_name_or_list='analytics.html',
         typical_users=typical_users
     )
+
+if __name__ == '__main__':
+    app.run(host='0.0.0.0')

@@ -79,3 +79,6 @@ def metrics():
     metrics_exporter_up_metric.labels(container=os.environ['HOSTNAME']).set(1)
 
     return generate_latest(REGISTRY), 200
+
+if __name__ == '__main__':
+    app.run(host='0.0.0.0')

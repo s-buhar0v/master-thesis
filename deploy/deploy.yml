@@ -27,4 +27,4 @@
         crontab "{{ project_path }}/jobs/crontab"
 
     - name: Start docker compose
-      script: ./2-un.sh -e prod -p "{{ project_path }}"
+      script: ./2-run.sh -e prod -p "{{ project_path }}"

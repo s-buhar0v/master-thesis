@@ -5,28 +5,26 @@ services:
     container_name: master-thesis-prom
     volumes:
       - "./configuration/prometheus.yml:/etc/prometheus/prometheus.yml"
-    ports:
-      - "9090:9090"
+    expose:
+      - "9090"
   victoria-metrics:
     image: victoriametrics/victoria-metrics:v1.33.1
     container_name: master-thesis-prom-storage
     volumes:
       - "victoria-metrics-data:/victoria-metrics-data"
-    ports:
-      - "8428:8428"
+    expose:
+      - "8428"
   grafana:
     image: grafana/grafana:6.7.2
     container_name: master-thesis-grafana
     volumes:
       - "grafana-data:/var/lib/grafana"
       - "./configuration/grafana.ini:/etc/grafana/grafana.ini"
-    ports:
-      - "3000:3000"
+    expose:
+      - "3000"
   metrics-exporter:
     image: master-thesis/metricsexporter:latest
     container_name: master-thesis-metrics-exporter
-    ports:
-      - "5000:5000"
     expose:
       - "5000"
     environment:
@@ -35,8 +33,6 @@ services:
   analytics-api:
     image: master-thesis/analyticsapi:latest
     container_name: master-thesis-analyticsapi
-    ports:
-      - "5001:5000"
     environment:
       MONGO_DB_CONNECTION_STRING: "mongodb+srv://developer:38ea0b9d@master-thesis-kwsx7.azure.mongodb.net/masterthesis?retryWrites=true&w=majority"
       VK_API_ACCESS_TOKEN: "d3006a9ed3006a9ed3006a9e64d36aa244dd300d3006a9e8d8a76b1127efc4988386342"

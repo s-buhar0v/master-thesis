@@ -1,4 +1,4 @@
-JOBS_PATH=/app/master-thesis/deployscripts/
+JOBS_PATH=/app/master-thesis/deploy/
 
 * * * * * ${JOBS_PATH}/_run-job.sh /app/master-thesis metricsprecalculation
 * * * * * ${JOBS_PATH}/_run-job.sh /app/master-thesis postcollector

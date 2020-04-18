@@ -5,7 +5,7 @@ set -eu
 PROJECT_PATH=${1}
 IMAGE_NAME=${2}
 
-source ${PROJECT_PATH}/deployscripts/_constants.sh
+source ${PROJECT_PATH}/deploy/_constants.sh
 
 IMAGE_FULL_NAME="${PROJECT_NAME}/${IMAGE_NAME}:latest"
 

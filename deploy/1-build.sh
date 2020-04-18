@@ -36,7 +36,7 @@ while getopts ":e:p:" option; do
     esac
 done
 
-source ${PROJECT_PATH}/deployscripts/_constants.sh
+source ${PROJECT_PATH}/deploy/_constants.sh
 
 INIT_IMAGE="${PROJECT_NAME}/${INIT_APP_NAME}:latest"
 EXPORTER_IMAGE="${PROJECT_NAME}/${EXPORTER_APP_NAME}:latest"

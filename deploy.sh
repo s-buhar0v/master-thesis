@@ -1,3 +1,3 @@
 set -eu
 
-ansible-playbook -i ./deployscripts/inventory.yml ./deployscripts/deploy.yml
+ansible-playbook -i ./deploy/inventory.yml ./deploy/deploy.yml

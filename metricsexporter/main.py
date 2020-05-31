@@ -5,7 +5,6 @@ from socialmonitor.dataproviders.vk import VkDataExtractor
 from prometheus_client import generate_latest, CollectorRegistry, Gauge
 
 REGISTRY = CollectorRegistry()
-group_name = 'w220.club'
 
 vk_data_extractor = VkDataExtractor()
 
@@ -58,27 +57,31 @@ app = Flask(__name__)
 def metrics():
     client = pymongo.MongoClient(os.environ['MONGO_DB_CONNECTION_STRING'])
     db = client.masterthesis
+    groups = db.groups.find({})
 
-    if db.metrics.count() > 0:
-        likes_count = db.metrics.find_one({'group': group_name, 'metrics': 'likes'})['value']
-        comments_count = db.metrics.find_one({'group': group_name, 'metrics': 'comments'})['value']
-        views_count = db.metrics.find_one({'group': group_name, 'metrics': 'views'})['value']
-        reposts_count = db.metrics.find_one({'group': group_name, 'metrics': 'reposts'})['value']
+    for g in groups:
 
-        posts_count = vk_data_extractor.get_group_posts_count(group_name=group_name)
-        members_count = vk_data_extractor.get_group_members_count(group_name=group_name)
+        if db.metrics.count_documents({}) > 0:
+            likes_count = db.metrics.find_one({'group': g['group'], 'metrics': 'likes'})['value']
+            comments_count = db.metrics.find_one({'group': g['group'], 'metrics': 'comments'})['value']
+            views_count = db.metrics.find_one({'group': g['group'], 'metrics': 'views'})['value']
+            reposts_count = db.metrics.find_one({'group': g['group'], 'metrics': 'reposts'})['value']
 
-        vk_posts_count_metric.labels(group=group_name).set(posts_count)
-        vk_members_count_metric.labels(group=group_name).set(members_count)
+            posts_count = vk_data_extractor.get_group_posts_count(group_name=g['group'])
+            members_count = vk_data_extractor.get_group_members_count(group_name=g['group'])
 
-        vk_likes_count_metric.labels(group=group_name).set(likes_count)
-        vk_comments_count_metric.labels(group=group_name).set(comments_count)
-        vk_views_count_metric.labels(group=group_name).set(views_count)
-        vk_reposts_count_metric.labels(group=group_name).set(reposts_count)
+            vk_posts_count_metric.labels(group=g['group']).set(posts_count)
+            vk_members_count_metric.labels(group=g['group']).set(members_count)
+
+            vk_likes_count_metric.labels(group=g['group']).set(likes_count)
+            vk_comments_count_metric.labels(group=g['group']).set(comments_count)
+            vk_views_count_metric.labels(group=g['group']).set(views_count)
+            vk_reposts_count_metric.labels(group=g['group']).set(reposts_count)
 
     metrics_exporter_up_metric.labels(container=os.environ['HOSTNAME']).set(1)
 
     return generate_latest(REGISTRY), 200
+
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0')

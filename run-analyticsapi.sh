@@ -1,6 +1,7 @@
 set -eu
 
-MONGO_DB_CONNECTION_STRING='mongodb+srv://developer:38ea0b9d@master-thesis-kwsx7.azure.mongodb.net/masterthesis?retryWrites=true&w=majority'
+#MONGO_DB_CONNECTION_STRING='mongodb+srv://developer:38ea0b9d@master-thesis-kwsx7.azure.mongodb.net/masterthesis?retryWrites=true&w=majority'
+MONGO_DB_CONNECTION_STRING='mongodb+srv://developer:38ea0b9d@local-development-2qesi.azure.mongodb.net/masterthesis?retryWrites=true&w=majority'
 
 docker run -it -w /app \
     -v $(pwd):/app \

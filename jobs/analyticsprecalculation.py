@@ -42,18 +42,17 @@ AGE_RANGES = [
         'end': 1111,
     }
 ]
-group_name = 'w220.club'
 
 
 def _calculate_percentage(total, part, ndigits=1):
     return round(number=part / total * 100, ndigits=ndigits)
 
 
-def _calculate_language_distribution():
+def _calculate_language_distribution(group_name):
     language_distribution = []
 
     users_with_filled_personal_data = list(
-        db.users.find({'personal': {'$ne': None}}, {'personal': 1})
+        db.users.find({'personal': {'$ne': None}, 'group_name': group_name}, {'personal': 1})
     )
 
     users_with_filled_languages = list(
@@ -82,10 +81,10 @@ def _calculate_language_distribution():
     }
 
 
-def _calculate_cities_distribution():
+def _calculate_cities_distribution(group_name):
     cities_distribution = []
 
-    users_with_filled_city = list(db.users.find({'city': {'$ne': None}}, {'city': 1}))
+    users_with_filled_city = list(db.users.find({'city': {'$ne': None}, 'group_name': group_name}, {'city': 1}))
     cities = set(map(lambda c: c['city']['title'], users_with_filled_city))
 
     for city in cities:
@@ -105,10 +104,10 @@ def _calculate_cities_distribution():
     }
 
 
-def _calculate_countries_distribution():
+def _calculate_countries_distribution(group_name):
     countries_distribution = []
 
-    users_with_filled_country = list(db.users.find({'country': {'$ne': None}}, {'country': 1}))
+    users_with_filled_country = list(db.users.find({'country': {'$ne': None}, 'group_name': group_name}, {'country': 1}))
     countries = set(map(lambda c: c['country']['title'], users_with_filled_country))
 
     for country in countries:
@@ -128,9 +127,9 @@ def _calculate_countries_distribution():
     }
 
 
-def _calculate_age_distribution():
+def _calculate_age_distribution(group_name):
     age_distribution = []
-    users_with_full_bdates = list(db.users.find({'bdate': {'$regex': '\d{1,2}.\d{1,2}.\d{4}'}}))
+    users_with_full_bdates = list(db.users.find({'bdate': {'$regex': '\d{1,2}.\d{1,2}.\d{4}'}, 'group_name': group_name}))
 
     for user_with_full_bday in users_with_full_bdates:
         user_with_full_bday['age'] = CURRENT_YEAR - int(user_with_full_bday['bdate'].split('.')[2])
@@ -157,8 +156,8 @@ def _calculate_age_distribution():
     }
 
 
-def _calculate_gender_distribution():
-    total_users_count = db.users.count_documents({})
+def _calculate_gender_distribution(group_name):
+    total_users_count = db.users.count_documents({'group_name': group_name})
     females = db.users.count_documents({'sex': 1})
     males = db.users.count_documents({'sex': 2})
 
@@ -169,64 +168,69 @@ def _calculate_gender_distribution():
     }
 
 
-def _calculate_higher_education_percentage(total_users_count):
-    users_with_filled_universities = db.users.count_documents({'universities': {'$ne': []}})
+def _calculate_higher_education_percentage(total_users_count, group_name):
+    users_with_filled_universities = db.users.count_documents({'universities': {'$ne': []}, 'group_name': group_name})
 
     return _calculate_percentage(total=total_users_count, part=users_with_filled_universities)
 
 
-def _calculate_relation_percentage(total_users_count):
+def _calculate_relation_percentage(total_users_count, group_name):
     # see https://vk.com/dev/objects/user_2
-    users_in_relation = db.users.count_documents({'relation': {'$in': [2, 3, 4, 7, 8]}})
+    users_in_relation = db.users.count_documents({'relation': {'$in': [2, 3, 4, 7, 8]}, 'group_name': group_name})
 
     return _calculate_percentage(total=total_users_count, part=users_in_relation)
 
 
-def _calculate_social_networks_connections_percentage(total_users_count):
+def _calculate_social_networks_connections_percentage(total_users_count, group_name):
     # see https://vk.com/dev/objects/user_2
     return {
         'skype': _calculate_percentage(total=total_users_count, part=(
-            db.users.count_documents({'skype': {'$ne': None}}))),
+            db.users.count_documents({'skype': {'$ne': None}, 'group_name': group_name}))),
         'facebook': _calculate_percentage(total=total_users_count, part=(
-            db.users.count_documents({'facebook': {'$ne': None}}))),
+            db.users.count_documents({'facebook': {'$ne': None}, 'group_name': group_name}))),
         'twitter': _calculate_percentage(total=total_users_count, part=(
-            db.users.count_documents({'twitter': {'$ne': None}}))),
+            db.users.count_documents({'twitter': {'$ne': None}, 'group_name': group_name}))),
         'livejournal': _calculate_percentage(total=total_users_count, part=(
-            db.users.count_documents({'livejournal': {'$ne': None}}))),
+            db.users.count_documents({'livejournal': {'$ne': None}, 'group_name': group_name}))),
         'instagram': _calculate_percentage(total=total_users_count, part=(
-            db.users.count_documents({'instagram': {'$ne': None}}))),
+            db.users.count_documents({'instagram': {'$ne': None}, 'group_name': group_name}))),
     }
 
 
 def main():
-    total_users_count = db.users.count_documents({})
 
-    db.analytics.update_one(
-        {
-            'group': group_name,
-        },
-        {
-            '$set': {
-                'total_user_count': total_users_count,
-                'gender_distribution': _calculate_gender_distribution(),
-                'higher_education_percentage': _calculate_higher_education_percentage(
-                    total_users_count=total_users_count
-                ),
-                'in_relation_percentage': _calculate_relation_percentage(
-                    total_users_count=total_users_count
-                ),
-                'social_networks_connection_percentage':
-                    _calculate_social_networks_connections_percentage(total_users_count=total_users_count),
-                'cities_distribution': _calculate_cities_distribution(),
-                'countries_distribution': _calculate_countries_distribution(),
-                'age_distribution': _calculate_age_distribution(),
-                'lang_distribution': _calculate_language_distribution(),
-                'last_update': datetime.utcnow().isoformat(),
-                'group': group_name
-            }
-        },
-        upsert=True
-    )
+    groups = db.groups.find({})
+
+    for g in groups:
+        total_users_count = db.users.count_documents({'group_name': g['group']})
+        db.analytics.update_one(
+            {
+                'group': g['group'],
+            },
+            {
+                '$set': {
+                    'total_user_count': total_users_count,
+                    'gender_distribution': _calculate_gender_distribution(group_name=g['group']),
+                    'higher_education_percentage': _calculate_higher_education_percentage(
+                        total_users_count=total_users_count,
+                        group_name=g['group']
+                    ),
+                    'in_relation_percentage': _calculate_relation_percentage(
+                        total_users_count=total_users_count,
+                        group_name=g['group']
+                    ),
+                    'social_networks_connection_percentage':
+                        _calculate_social_networks_connections_percentage(total_users_count=total_users_count, group_name=g['group']),
+                    'cities_distribution': _calculate_cities_distribution(group_name=g['group']),
+                    'countries_distribution': _calculate_countries_distribution(group_name=g['group']),
+                    'age_distribution': _calculate_age_distribution(group_name=g['group']),
+                    'lang_distribution': _calculate_language_distribution(group_name=g['group']),
+                    'last_update': datetime.utcnow().isoformat(),
+                    'group':  g['group'],
+                }
+            },
+            upsert=True
+        )
 
 
 if __name__ == '__main__':

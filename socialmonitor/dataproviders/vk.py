@@ -15,6 +15,19 @@ class VkDataExtractor(HttpClientMixin):
         }
         self._fields = 'sex,bdate,city,country,photo_max_orig,domain,connections,universities,last_seen,relation,music,personal,movies'
 
+    def get_group_id(self, group_name):
+        params = {
+            'group_id': group_name,
+        }
+
+        params.update(self._default_params)
+
+        vk_response = self.request(method='get', endpoint='/groups.getById', params=params).json()
+
+        if 'response' in vk_response:
+            return vk_response['response'][0]['id']
+        return None
+
     def search_groups(self, keywords, count=3):
         params = {
             'type': 'group',
@@ -51,7 +64,12 @@ class VkDataExtractor(HttpClientMixin):
         }
         params.update(self._default_params)
 
-        return self.request(method='get', endpoint='/wall.get', params=params).json()['response']['items']
+        posts = self.request(method='get', endpoint='/wall.get', params=params).json()['response']['items']
+
+        for p in posts:
+            p.update({'group_name': group_name})
+
+        return posts
 
     def get_posts(self, post_ids):
         params = {
@@ -84,7 +102,7 @@ class VkDataExtractor(HttpClientMixin):
 
         return self.request(method='get', endpoint='/groups.getMembers', params=params).json()['response']['items']
 
-    def get_users(self, user_ids):
+    def get_users(self, user_ids, group_name):
         params = {
             'user_ids': user_ids,
             'fields': self._fields
@@ -92,4 +110,10 @@ class VkDataExtractor(HttpClientMixin):
 
         params.update(self._default_params)
 
-        return self.request(method='get', endpoint='/users.get', params=params).json()['response']
+        users = self.request(method='get', endpoint='/users.get', params=params).json()['response']
+
+        for p in users:
+            p.update({'group_name': group_name})
+
+        return users
+

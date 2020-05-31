@@ -31,27 +31,29 @@ def _get_group_members_ids(group_name):
 
 
 def main():
-    group_name = 'w220.club'
     client = pymongo.MongoClient(os.environ['MONGO_DB_CONNECTION_STRING'])
     db = client.masterthesis
+    groups = db.groups.find({})
 
-    active_group_members_ids = _get_group_members_ids(group_name=group_name)
-    existing_group_members_ids = set(db.users.distinct('id'))
+    for g in groups:
+        active_group_members_ids = _get_group_members_ids(group_name=g['group'])
+        existing_group_members_ids = set(db.users.distinct('id'))
 
-    new_members_ids = list(set(active_group_members_ids['members']) - existing_group_members_ids)
-    new_members = []
+        new_members_ids = list(set(active_group_members_ids['members']) - existing_group_members_ids)
+        new_members = []
 
-    if new_members_ids:
-        for i in range(0, len(new_members_ids), 300):
-            user_ids = ','.join(map(str, new_members_ids[i:i + 300]))
-            new_members.extend(
-                vk_data_extractor.get_users(
-                    user_ids=user_ids
+        if new_members_ids:
+            for i in range(0, len(new_members_ids), 300):
+                user_ids = ','.join(map(str, new_members_ids[i:i + 300]))
+                new_members.extend(
+                    vk_data_extractor.get_users(
+                        user_ids=user_ids,
+                        group_name=g['group']
+                    )
                 )
-            )
 
-    if new_members:
-        db.users.insert_many(new_members)
+        if new_members:
+            db.users.insert_many(new_members)
 
 
 if __name__ == '__main__':

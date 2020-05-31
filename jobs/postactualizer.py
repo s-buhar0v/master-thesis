@@ -2,15 +2,12 @@ import os
 import pymongo
 from socialmonitor.dataproviders.vk import VkDataExtractor
 
-group_name = 'w220.club'
-
-
 def _map_vk_post(post):
     return {
         'social_network_id': post['id'],
         'type': 'vk',
         'owner_id': post['owner_id'],
-        'group_name': group_name,
+        'group_name': post['group_name'],
         'likes': post['likes']['count'],
         'views': post['views']['count'],
         'comments': post['comments']['count'],
@@ -28,7 +25,6 @@ def main():
 
     chunked_posts = []
     chunk_size = 100
-
     for i in range(0, len(posts), chunk_size):
         chunked_posts.append(','.join(posts[i:i + chunk_size]))
 

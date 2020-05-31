@@ -1,10 +1,12 @@
 import os
 import pymongo
 
-from flask import Flask, jsonify, render_template
+from flask import Flask, jsonify, render_template, request, redirect, url_for
+from socialmonitor.dataproviders.vk import VkDataExtractor
 
 app = Flask(__name__, static_folder='static')
 client = pymongo.MongoClient(os.environ['MONGO_DB_CONNECTION_STRING'])
+vk_data_extractor = VkDataExtractor()
 
 
 def _get_distribution_top(distribution, field):
@@ -24,6 +26,42 @@ def main():
     return render_template(
         template_name_or_list='index.html'
     )
+
+
+@app.route('/app/group', methods=['GET'])
+def group_list():
+    groups = client.masterthesis.groups.find({})
+
+    return render_template(
+        template_name_or_list='groups.html',
+        payload={'message': '', 'groups': groups}
+    )
+
+
+@app.route('/app/group', methods=['POST'])
+def group_add():
+    group = request.form['group']
+    group_id = vk_data_extractor.get_group_id(group_name=group)
+    message = ''
+
+    if group_id:
+        print(group_id)
+        client.masterthesis.groups.update_one(
+            {'group': group},
+            {
+                '$set': {
+                    'group': group,
+                }
+            },
+            upsert=True
+        )
+        return redirect(url_for('group_list'))
+    else:
+        groups = client.masterthesis.groups.find({})
+        return render_template(
+            template_name_or_list='groups.html',
+            payload={'message': f'No such group {group}', 'groups': groups}
+        )
 
 
 @app.route('/app/analytics')
@@ -63,6 +101,7 @@ def analytics():
         template_name_or_list='analytics.html',
         typical_users=typical_users
     )
+
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0')

@@ -45,7 +45,6 @@ def group_add():
     message = ''
 
     if group_id:
-        print(group_id)
         client.masterthesis.groups.update_one(
             {'group': group},
             {
@@ -94,8 +93,6 @@ def analytics():
             )
         )
     }, group_analytics))
-
-    print(typical_users)
 
     return render_template(
         template_name_or_list='analytics.html',

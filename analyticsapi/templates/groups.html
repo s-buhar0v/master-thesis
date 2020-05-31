@@ -19,7 +19,7 @@
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
       <ul class="navbar-nav mr-auto">
         <li class="nav-item">
-          <a class="nav-link" href="/app/groups">Group management</a>
+          <a class="nav-link" href="/app/group">Group management</a>
         </li>
         <li class="nav-item">
           <a class="nav-link" href="/app/analytics">Analytics</a>
@@ -47,6 +47,28 @@
   <h6>{{ payload.message }}</h6>
   <hr>
   <h5>Available groups</h5>
+  <table class="table table-dark">
+    <thead>
+      <tr>
+        <th scope="col">Group</th>
+        <th scope="col">Link</th>
+        <th scope="col">Metrics</th>
+      </tr>
+    </thead>
+    <tbody>
+      {%for g in payload.groups%}
+      <tr>
+        <td>{{ g['group'] }}</td>
+        <td>
+          <a href="http://vk.com/{{g.group}}">vk.com/{{g.group}}</a>
+        </td>
+        <td>
+          <a href="http://hsesbmasterthesis.space/operational/d/b5V2idQZk/operational-dashboard?orgId=1&var-group={{g.group}}&var-time_range=1m">See metrics</a>
+        </td>
+      </tr>
+      {%endfor%}
+    </tbody>
+  </table>
   <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
     integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
     crossorigin="anonymous"></script>

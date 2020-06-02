@@ -57,6 +57,7 @@ class VkDataExtractor(HttpClientMixin):
         return self.request(method='get', endpoint='/wall.get', params=params).json()['response']['count']
 
     def get_group_posts(self, group_name, count=2):
+
         params = {
             'domain': group_name,
             'count': count,

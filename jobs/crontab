@@ -2,6 +2,6 @@ JOBS_PATH=/app/master-thesis/deploy/
 
 * * * * * ${JOBS_PATH}/_run-job.sh /app/master-thesis metricsprecalculation
 * * * * * ${JOBS_PATH}/_run-job.sh /app/master-thesis postcollector
-* * * * * ${JOBS_PATH}/_run-job.sh /app/master-thesis postactualizer
+*/5 * * * * ${JOBS_PATH}/_run-job.sh /app/master-thesis postactualizer
 */5 * * * * ${JOBS_PATH}/_run-job.sh /app/master-thesis userdatacollector
 */5 * * * * ${JOBS_PATH}/_run-job.sh /app/master-thesis analyticsprecalculation

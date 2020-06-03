@@ -23,9 +23,7 @@ def analyze():
 
 @app.route('/app')
 def main():
-    return render_template(
-        template_name_or_list='index.html'
-    )
+    return redirect(url_for('group_list'))
 
 
 @app.route('/app/group', methods=['GET'])
